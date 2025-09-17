@@ -45,14 +45,14 @@ public partial class AddVideo : Button
 		}
 		html += "]";
 		html += "\n" + "description = \"" + description.Text + "\"";
-		html += "\n" + "sources = []";
+		html += "\n" + "citations = []";
 		html += "\n" + "mirroredLinks = []";
 		html += "\n" + "+++";
 
 		DirAccess dir = DirAccess.Open("res://../../../");
 		if(dir.GetDirectories().Contains("content"))
 		{
-			var fileAcess = FileAccess.Open("res://../../../content/videos/" + GenerateWord(25) + ".html", FileAccess.ModeFlags.Write);
+			var fileAcess = FileAccess.Open("res://../../../content/videos/" + GenerateWord(25) + ".md", FileAccess.ModeFlags.Write);
 			fileAcess.StoreString(html);
 			fileAcess.Close();
 		}

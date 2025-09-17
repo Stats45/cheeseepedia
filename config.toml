@@ -4,6 +4,7 @@ title = 'Cheese-E-Pedia'
 theme = 'sixtyth-fortran'
 refLinksErrorLevel = 'WARNING'
 enableGitInfo = true
+timeout = 500
 
 [markup]
   [markup.goldmark]
@@ -19,6 +20,10 @@ weight = 10
 name = 'All Pages'
 pageRef = '/wiki'
 weight = 40
+
+[outputs]
+section = []
+
 
 [taxonomies]
   category = 'categories'

@@ -1,13 +1,16 @@
 {{- $gallery := partial "display-gallery.html" . -}}
 {{- $videos := partial "display-video-gallery.html" . -}}
 {{- $transcriptions := partial "display-transcriptions.html" . -}}
+{{- $reviews := partial "display-reviews.html" . -}}
+{{- $sales := partial "display-sales.html" . -}}
 {{- $article := false -}}
-{{- if or (ne $gallery "") (ne $videos "") (ne $transcriptions "") -}}
+{{- if or (ne $gallery "") (ne $videos "") (ne $transcriptions "") (ne $sales "") (ne $reviews "") -}}
   {{- $article = true -}}
 {{- end -}}
 
 {{- partial "display-breadcrumbs.html" . -}}
-<h1>{{- .Title | safeHTML -}}</h1>
+<h1 data-pagefind-weight="10">{{- .Title | safeHTML -}}</h1>
+<aside data-pagefind-ignore="all">
 <div class="article-topBar">
   {{- if $article -}}
     <button class="article-button" data-target="section-article">Article</button>
@@ -21,9 +24,15 @@
   {{- if ne $transcriptions "" -}}
   <button class="article-button" data-target="section-transcriptions">Transcriptions</button>
   {{- end -}}
+  {{- if ne $reviews "" -}}
+  <button class="article-button" data-target="section-reviews">Reviews</button>
+  {{- end -}}
+  {{- if ne $sales "" -}}
+  <button class="article-button" data-target="section-sales">Sales</button>
+  {{- end -}}
   {{- partial "editButton.html" . -}}
 </div>
-
+</aside>
 <div id="section-article" class="article-section">
   {{- partial "display-infobox.html" . -}}
   {{- .Content | safeHTML}}
@@ -45,10 +54,20 @@
   {{- end -}}
 </div>
 <div id="section-reviews" class="article-section">
+  {{- if ne $reviews "" -}}
+    {{- $reviews -}}
+  {{- end -}}
+</div>
+<div id="section-sales" class="article-section">
+  {{- if ne $sales "" -}}
+    {{- $sales -}}
+  {{- end -}}
 </div>
 <hr>
 {{- partial "display-contributors.html" . -}}
+<aside data-pagefind-ignore="all">
 <h2>Random Articles</h2>
+</aside>
 {{- partial "random-page.html" . -}}
 {{- partial "random-page.html" . -}}
 

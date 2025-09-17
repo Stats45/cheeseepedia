@@ -1,18 +1,20 @@
+
 {{- $tagCategories := dict
-"Animatronics & Walkarounds" (slice "Animatronic Shows" "Stage Variations" "Animatronics" "Retrofits" "Costumed Characters" "Animatronic Repair & Preservation")
-"Showtapes" (slice "Showtapes" "Showtape Formats" "Live Shows" "Showtape Puppets" "Family Vision" "ShowBiz Pizza Programs")
-"Products" (slice "Merchandise" "Menu Items" "Tokens" "Tickets" "Movies" "Video Games")
-"Locations" (slice "Locations" "Arcade Games" "Employee Wear" "Remodels & Initiatives" "Store Fixtures" "Ad Vehicles" )
-"Hardware & Software" (slice "Animatronic Control Systems" "Other Systems" "Programming Systems"
-"Animatronic Control Systems")
-"Documents" (slice "Promotional Material" "Documents" "Corporate Documents" "Training, Updates, & Company Media")
-"Media" (slice "Photos" "Videos" "News Footage" "Commercials")
-"History" (slice "History" "Events" "Characters")
--}}
+  "Animatronics & Walkarounds" (slice "Animatronic Shows" "Stage Variations" "Animatronics" "Retrofits" "Costumed Characters" "Animatronic Parts" "Animatronic Preservation")
+  "Showtapes" (slice "Showtapes" "Showtape Formats" "Live Shows" "Showtape Puppets" "Family Vision" "ShowBiz Pizza Programs")
+  "Products" (slice "In-Store Merchandise" "Products" "Menu Items" "Tokens" "Tickets" "Movies" "Video Games")
+  "Locations" (slice "Locations" "Arcade Games" "Employee Wear" "Remodels and Initiatives" "Store Fixtures" "Ad Vehicles" )
+  "Hardware & Software" (slice "Animatronic Control Systems" "Other Systems" "Simulators" "Programming Systems"
+  "Animatronic Control Systems")
+  "Documents" (slice "Promotional Material" "Documents" "Corporate Documents")
+  "Media" (slice "Photos" "Videos" "News Footage" "Commercials" "Company Media")
+  "History" (slice "History" "Events" "Characters" "Social Media and Websites" "Restaurants/FECs")
+  -}}
 
 
 {{- $pages := .Site.RegularPages -}}
-<div id="tagsContainer">
+<div id="loadingText" class="loading-text">Loading. . .</div>
+<div id="tagsContainer" style="visibility:hidden;">
   {{- $tags := dict -}} <!-- Initialize a dictionary to store tags and counts -->
   {{- range $pages -}}
   {{- $currentPage := . -}}
@@ -57,8 +59,10 @@
           {{- $tagFix := (replace $tag " " "-") -}}
           {{- $tagFix := (replace $tagFix "&-" "") -}}
           {{- $tagFix := (replace $tagFix "," "") -}}
+          {{- $tagFix := urlize $tagFix -}}
+
           <li>
-            <a href="{{- (site.GetPage (printf "/tags/%s" $tagFix)).RelPermalink -}}" title="All pages with tag <i>{{- $tag -}}</i>">{{- $tag -}}</a>
+            <a href="{{- (site.GetPage (printf "/tags/%s" $tagFix)).RelPermalink -}}" title="All pages with tag <i>{{- $tagFix -}}</i>">{{- partial "emojify.html" $tag -}}</a>
             <sup>{{- $count -}}</sup>
           </li>
           {{- end -}}
@@ -76,8 +80,10 @@
           {{- $tagFix := (replace $tag " " "-") -}}
           {{- $tagFix := (replace $tagFix "&-" "") -}}
           {{- $tagFix := (replace $tagFix "," "") -}}
+          {{- $tagFix := urlize $tagFix -}}
+
           <li>
-            <a href="{{- (site.GetPage (printf "/tags/%s" $tagFix)).RelPermalink -}}" title="All pages with tag <i>{{- $tag -}}</i>">{{- $tag -}}</a>
+            <a href="{{- (site.GetPage (printf "/tags/%s" $tagFix)).RelPermalink -}}" title="All pages with tag <i>{{- $tagFix -}}</i>">{{- partial "emojify.html" $tag -}}</a>
             <sup>{{- $count -}}</sup>
           </li>
           {{- end -}}
@@ -87,3 +93,14 @@
     </ul>
   </div>
 </div>
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    // Once the DOM is ready, flip visibility for the first set
+    var loading = document.getElementById("loadingText");
+    var tags = document.getElementById("tagsContainer");
+    if (loading && tags) {
+      loading.style.visibility = "hidden";
+      tags.style.visibility = "visible";
+    }
+  });
+</script>

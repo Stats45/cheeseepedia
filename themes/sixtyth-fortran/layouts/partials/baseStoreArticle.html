@@ -1,15 +1,14 @@
 {{- $gallery := partial "display-gallery.html" . -}}
 {{- $videos := partial "display-video-gallery.html" . -}}
+{{- $transcriptions := partial "display-transcriptions.html" . -}}
+{{- $reviews := partial "display-reviews.html" . -}}
 {{- $article := false -}}
-{{- if ne $gallery "" -}}
-  {{- $article = true -}}
-{{- end -}}
-{{- if ne $videos "" -}}
+{{- if or (ne $gallery "") (ne $videos "") (ne $transcriptions "") -}}
   {{- $article = true -}}
 {{- end -}}
 
 {{- partial "display-breadcrumbs.html" . -}}
-<h1>{{- .Title | safeHTML -}}</h1>
+<h1 data-pagefind-weight="10">{{- .Title | safeHTML -}}</h1>
 <div class="article-topBar">
   {{- if $article -}}
     <button class="article-button" data-target="section-article">Article</button>
@@ -20,16 +19,66 @@
   {{- if ne $videos "" -}}
     <button class="article-button" data-target="section-videos">Videos</button>
   {{- end -}}
+  {{- if ne $transcriptions "" -}}
+  <button class="article-button" data-target="section-transcriptions">Transcriptions</button>
+  {{- end -}}
+  {{- if ne $reviews "" -}}
+  <button class="article-button" data-target="section-reviews">Reviews</button>
+  {{- end -}}
   {{- partial "editButton.html" . -}}
 </div>
 
 <div id="section-article" class="article-section">
   {{- if .Params.pageThumbnailFile -}}
     <div class="article-store-thumbnail">
-      {{- partial "filename-to-photo-no-css.html" .Params.pageThumbnailFile -}}
+      {{- partial "filename-to-photo-no-css-no-desc.html" .Params.pageThumbnailFile -}}
     </div>
   {{- end -}}
+  {{- partial "display-infobox-location.html" . -}}
   {{- .Content | safeHTML -}}
+  {{- with .Params.animatronics }}
+    <h2>Animatronics</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Character</th>
+          <th>Operation</th>
+          <th>Serial</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{- range . }}
+          {{- $parts := split . "|" -}}
+          {{- $name := index $parts 0 -}}
+          {{- $start := index $parts 1 -}} 
+          {{- $end := index $parts 2 -}} 
+          {{- $serial := index $parts 3 -}}
+          {{- $status := index $parts 4 -}}
+          <tr>
+            <td>{{ partial "wiki-link.html" (dict "name" $name "context" $) }}</td>
+            <td>{{ partial "date-to-readable-date.html" $start }} – {{ partial "date-to-readable-date.html" $end }}</td>
+            <td>{{ $serial }}</td>
+            <td>{{ $status }}</td>
+          </tr>
+        {{- end }}
+      </tbody>
+    </table>
+  {{- end }}
+  {{- with .Params.attractions }}
+    <h2>Attractions</h2>
+    <ul>
+      {{- range . }}
+        {{- $parts := split . "|" -}}
+        {{- $name := index $parts 0 -}}
+        {{- $start := index $parts 1 -}}
+        {{- $end := index $parts 2 -}}
+        <li>
+          {{ partial "wiki-link.html" (dict "name" $name "context" $) }} ({{ partial "date-to-readable-date.html" $start }} – {{ partial "date-to-readable-date.html" $end }})
+        </li>
+      {{- end }}
+    </ul>
+  {{- end }}
 </div>
 {{- if ne $gallery "" -}}
   <div id="section-gallery" class="article-section">
@@ -41,8 +90,15 @@
     {{- $videos -}}
   {{- end -}}
 </div>
+<div id="section-transcriptions" class="article-section">
+  {{- if ne $transcriptions "" -}}
+    {{- $transcriptions -}}
+  {{- end -}}
+</div>
 <div id="section-reviews" class="article-section">
-
+  {{- if ne $reviews "" -}}
+    {{- $reviews -}}
+  {{- end -}}
 </div>
 <hr>
 {{- partial "display-citations.html" . -}}
